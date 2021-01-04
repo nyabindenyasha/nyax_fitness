@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "account")
-public class Account implements Serializable {
+public class UserAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,7 +35,7 @@ public class Account implements Serializable {
 
     @Size(min = 1, max = 50)
     @Column(name = "user_name")
-    private String userName;
+    private String username;
 
     @Enumerated(EnumType.ORDINAL)
     private Role role;
@@ -46,50 +46,50 @@ public class Account implements Serializable {
     @Column(name = "team_id")
     private int teamId;
 
-    public Account() {
+    public UserAccount() {
     }
 
-    public Account(Integer id) {
+    public UserAccount(Integer id) {
         this.id = id;
     }
 
-    public Account(Integer id, String firstName, String lastName, String password) {
+    public UserAccount(Integer id, String firstName, String lastName, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
     }
 
-    public static Account fromCommand(Account request) {
+    public static UserAccount fromCommand(UserAccount request) {
 
         if (request == null) {
             return null;
         }
 
-        Account account = new Account();
-        account.setFirstName(request.getFirstName());
-        account.setLastName(request.getLastName());
-        account.setUserName(request.getUserName());
-        account.setPassword(request.getPassword());
-        account.setRole(request.getRole());
-        account.setTeamId(request.teamId);
-        return account;
+        UserAccount userAccount = new UserAccount();
+        userAccount.setFirstName(request.getFirstName());
+        userAccount.setLastName(request.getLastName());
+        userAccount.setUsername(request.getUsername());
+        userAccount.setPassword(request.getPassword());
+        userAccount.setRole(request.getRole());
+        userAccount.setTeamId(request.teamId);
+        return userAccount;
     }
 
-    public void update(Account updateRequest) {
+    public void update(UserAccount updateRequest) {
         this.setFirstName(updateRequest.getFirstName());
         this.setLastName(updateRequest.getLastName());
-        this.setUserName(updateRequest.getUserName());
+        this.setUsername(updateRequest.getUsername());
         this.setRole(updateRequest.getRole());
     }
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "UserAccount{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", userName='" + userName + '\'' +
+                ", username='" + username + '\'' +
                 ", role=" + role +
                 '}';
     }

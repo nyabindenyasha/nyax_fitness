@@ -1,12 +1,11 @@
 package com.nyasha.fitnessapp.service;
 
-import java.util.List;
-
+import com.nyasha.fitnessapp.models.Teams;
+import com.nyasha.fitnessapp.repo.TeamsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nyasha.fitnessapp.models.Teams;
-import com.nyasha.fitnessapp.repo.TeamsRepo;
+import java.util.List;
 
 @Service
 public class TeamsService {
@@ -36,6 +35,10 @@ public class TeamsService {
 
 	public void delete(long id) {
 		teamsRepo.deleteById(id);
+	}
+
+	public boolean existsByName(String name) {
+		return teamsRepo.existsByName(name);
 	}
 
 }

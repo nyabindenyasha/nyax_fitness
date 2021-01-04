@@ -3,8 +3,8 @@ package com.nyasha.fitnessapp.controller;
 import com.minimum.local.InvalidRequestException;
 import com.minimum.local.ResponseMessage;
 import com.nyasha.fitnessapp.local.LoginRequest;
-import com.nyasha.fitnessapp.models.Account;
-import com.nyasha.fitnessapp.service.UserService;
+import com.nyasha.fitnessapp.models.UserAccount;
+import com.nyasha.fitnessapp.service.UserAccountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -22,9 +22,9 @@ import java.util.Collection;
 @RequestMapping("v1/userAccounts")
 public class UserAccountController {
 
-    private final UserService userAccountService;
+    private final UserAccountService userAccountService;
 
-    public UserAccountController(UserService userAccountService) {
+    public UserAccountController(UserAccountService userAccountService) {
         this.userAccountService = userAccountService;
     }
 
@@ -33,8 +33,8 @@ public class UserAccountController {
     public ResponseEntity<?> getAll(@PageableDefault(sort = "name") Pageable pageable,
                                 @RequestParam(required = false) String search) {
         try {
-            Page<Account> accounts = userAccountService.findAll(pageable, search);
-            return new ResponseEntity<Page<Account>>(accounts, HttpStatus.OK);
+            Page<UserAccount> accounts = userAccountService.findAll(pageable, search);
+            return new ResponseEntity<Page<UserAccount>>(accounts, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -45,8 +45,8 @@ public class UserAccountController {
     @ApiOperation("Get All UserAccounts")
     public ResponseEntity<?> getAll() {
         try {
-            Collection<Account> accounts = userAccountService.findAll();
-            return new ResponseEntity<Collection<Account>>(accounts, HttpStatus.OK);
+            Collection<UserAccount> userAccounts = userAccountService.findAll();
+            return new ResponseEntity<Collection<UserAccount>>(userAccounts, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -57,8 +57,8 @@ public class UserAccountController {
     @ApiOperation("Get All TeamAdmins")
     public ResponseEntity<?> getLecturers() {
         try {
-            Collection<Account> accounts = userAccountService.findAllTeamAdmins();
-            return new ResponseEntity<Collection<Account>>(accounts, HttpStatus.OK);
+            Collection<UserAccount> userAccounts = userAccountService.findAllTeamAdmins();
+            return new ResponseEntity<Collection<UserAccount>>(userAccounts, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -69,8 +69,8 @@ public class UserAccountController {
     @ApiOperation("Get a UserAccount by Id")
     public ResponseEntity<?> getUserAccount(@PathVariable long userAccountId) {
         try {
-            Account account = userAccountService.findById(userAccountId);
-            return new ResponseEntity<Account>(account, HttpStatus.OK);
+            UserAccount userAccount = userAccountService.findById(userAccountId);
+            return new ResponseEntity<UserAccount>(userAccount, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -92,11 +92,11 @@ public class UserAccountController {
 
     @PostMapping("")
     @ApiOperation("Create UserAccount")
-    public ResponseEntity<?> create(@RequestBody Account request) {
+    public ResponseEntity<?> create(@RequestBody UserAccount request) {
         System.out.println(request);
         try {
-            Account userAccountCreated = userAccountService.create(request);
-            return new ResponseEntity<Account>(userAccountCreated, HttpStatus.OK);
+            UserAccount userAccountCreated = userAccountService.create(request);
+            return new ResponseEntity<UserAccount>(userAccountCreated, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -107,8 +107,8 @@ public class UserAccountController {
     @ApiOperation("Login to the system")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         try {
-            Account userLoggedIn = userAccountService.login(loginRequest);
-            return new ResponseEntity<Account>(userLoggedIn, HttpStatus.OK);
+            UserAccount userLoggedIn = userAccountService.login(loginRequest);
+            return new ResponseEntity<UserAccount>(userLoggedIn, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -117,13 +117,13 @@ public class UserAccountController {
 
     @PutMapping("/{userAccountId}")
     @ApiOperation("Update userAccount")
-    public ResponseEntity<?> update(@RequestBody Account request, @PathVariable long userAccountId) {
+    public ResponseEntity<?> update(@RequestBody UserAccount request, @PathVariable long userAccountId) {
         try {
             if(request.getId() != userAccountId){
                 throw new InvalidRequestException("You can not delete this record as it might be used by another record");
             }
-            Account userAccountUpdated = userAccountService.update(request);
-            return new ResponseEntity<Account>(userAccountUpdated, HttpStatus.OK);
+            UserAccount userAccountUpdated = userAccountService.update(request);
+            return new ResponseEntity<UserAccount>(userAccountUpdated, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -135,8 +135,8 @@ public class UserAccountController {
     @ApiOperation("Find By Username or Firstname")
     public ResponseEntity<?> findByUsernameOrFirstname(@RequestParam(required = false)  String username, @RequestParam(required = false) String firstName){
         try {
-            Account user = userAccountService.findByUsernameOrFirstname(username, firstName);
-            return new ResponseEntity<Account>(user, HttpStatus.OK);
+            UserAccount user = userAccountService.findByUsernameOrFirstname(username, firstName);
+            return new ResponseEntity<UserAccount>(user, HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(new ResponseMessage(e.getMessage()), HttpStatus.BAD_REQUEST);

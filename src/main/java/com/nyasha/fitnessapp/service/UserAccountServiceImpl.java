@@ -3,7 +3,7 @@ package com.nyasha.fitnessapp.service;
 import com.minimum.local.InvalidRequestException;
 import com.nyasha.fitnessapp.local.LoginRequest;
 import com.nyasha.fitnessapp.local.enums.Role;
-import com.nyasha.fitnessapp.models.Account;
+import com.nyasha.fitnessapp.models.UserAccount;
 import com.nyasha.fitnessapp.repo.UserAccountRepository;
 import lombok.val;
 import org.hibernate.exception.ConstraintViolationException;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-class UserAccountServiceImpl extends BaseServiceImpl<Account, Account, Account> implements UserService {
+class UserAccountServiceImpl extends BaseServiceImpl<UserAccount, UserAccount, UserAccount> implements UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
 
@@ -24,34 +24,34 @@ class UserAccountServiceImpl extends BaseServiceImpl<Account, Account, Account> 
     }
 
     @Override
-    protected Class<Account> getEntityClass() {
-        return Account.class;
+    protected Class<UserAccount> getEntityClass() {
+        return UserAccount.class;
     }
 
     @Override
-    public Account create(Account request) {
+    public UserAccount create(UserAccount request) {
 
-        boolean detailsExist = userAccountRepository.existsByUserName(request.getUserName());
+        boolean detailsExist = userAccountRepository.existsByUsername(request.getUsername());
 
         if (detailsExist) {
             throw new InvalidRequestException("UserAccount already exist.");
         }
 
-        Account userAccount = Account.fromCommand(request);
+        UserAccount userAccount = UserAccount.fromCommand(request);
 
         return userAccountRepository.save(userAccount);
     }
 
     @Override
-    public Account update(Account request) {
+    public UserAccount update(UserAccount request) {
 
-        boolean detailsExists = userAccountRepository.existsByUserName(request.getUserName());
+        boolean detailsExists = userAccountRepository.existsByUsername(request.getUsername());
 
         if (!detailsExists) {
             throw new InvalidRequestException("UserAccount not found");
         }
 
-        Account userAccount = findById(request.getId());
+        UserAccount userAccount = findById(request.getId());
 
         userAccount.update(request);
 
@@ -69,41 +69,41 @@ class UserAccountServiceImpl extends BaseServiceImpl<Account, Account, Account> 
 
 
     @Override
-    public Account login(LoginRequest request) {
-        Account account;
-        if (!userAccountRepository.existsByUserName(request.getUserName())) {
+    public UserAccount login(LoginRequest request) {
+        UserAccount userAccount;
+        if (!userAccountRepository.existsByUsername(request.getUserName())) {
             throw new InvalidRequestException("User does not exist");
         }
-        account = findByUsername(request.getUserName());
+        userAccount = findByUsername(request.getUserName());
 
-        if (!account.getPassword().equals(request.getPassword())) {
+        if (!userAccount.getPassword().equals(request.getPassword())) {
             throw new InvalidRequestException("Wrong password");
         }
-        return account;
+        return userAccount;
     }
 
     @Override
-    public Account updatePassword(LoginRequest request) {
+    public UserAccount updatePassword(LoginRequest request) {
         return null;
     }
 
 
     @Override
-    public Account findByUsername(String username) {
-        return userAccountRepository.findByUserName(username).get();
-        //      .orElseThrow(() -> new InvalidRequestException("User record was not found for the supplied userName"));
+    public UserAccount findByUsername(String username) {
+        return userAccountRepository.findByUsername(username).get();
+        //      .orElseThrow(() -> new InvalidRequestException("User record was not found for the supplied username"));
     }
 
     @Override
-    public Account findByFirstName(String firstName) {
+    public UserAccount findByFirstName(String firstName) {
         return userAccountRepository.findByFirstName(firstName).get();
         //     .orElseThrow(() -> new InvalidRequestException("User record was not found for the supplied firstName"));
     }
 
     @Override
-    public Account findByUsernameOrFirstname(String username, String firstName) {
+    public UserAccount findByUsernameOrFirstname(String username, String firstName) {
 
-        boolean userByUsernameExists = userAccountRepository.existsByUserName(username);
+        boolean userByUsernameExists = userAccountRepository.existsByUsername(username);
         boolean userByFirstNameExists = userAccountRepository.existsByFirstName(firstName);
 
         if (userByUsernameExists) {
@@ -115,7 +115,12 @@ class UserAccountServiceImpl extends BaseServiceImpl<Account, Account, Account> 
             System.out.println(userByFirstName);
             return userByFirstName;
         } else
-            throw new InvalidRequestException("User record was not found for the supplied firstName or userName");
+            throw new InvalidRequestException("User record was not found for the supplied firstName or username");
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userAccountRepository.existsByUsername(username);
     }
 
     @Override
@@ -124,9 +129,9 @@ class UserAccountServiceImpl extends BaseServiceImpl<Account, Account, Account> 
     }
 
     @Override
-    public Collection<Account> findAllTeamAdmins() {
-        Collection<Account> accounts = userAccountRepository.findAll();
-        Collection<Account> lecturers = accounts.parallelStream().filter(account -> account.getRole() == Role.TEAM_ADMIN).collect(Collectors.toList());
+    public Collection<UserAccount> findAllTeamAdmins() {
+        Collection<UserAccount> userAccounts = userAccountRepository.findAll();
+        Collection<UserAccount> lecturers = userAccounts.parallelStream().filter(account -> account.getRole() == Role.TEAM_ADMIN).collect(Collectors.toList());
         return lecturers;
     }
 }

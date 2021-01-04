@@ -8,7 +8,9 @@ public interface AthleteRepo extends BaseRepository<Athlete> {
 
     Athlete findByFullName(String fullName);
 
-    List<Athlete> findByTeamId(int id);
+    boolean existsByFullName(String fullName);
+
+    List<Athlete> findByTeamId(long id);
 
 }
 

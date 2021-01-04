@@ -17,7 +17,7 @@ public class AthleteService {
         return (List<Athlete>) athleteRepo.findAll();
     }
 
-    public List<Athlete> findByTeamId(int id) {
+    public List<Athlete> findByTeamId(long id) {
         return athleteRepo.findByTeamId(id);
     }
 
@@ -39,6 +39,10 @@ public class AthleteService {
 
     public void delete(long id) {
         athleteRepo.deleteById(id);
+    }
+
+    public boolean existsByFullName(String fullName) {
+        return athleteRepo.existsByFullName(fullName);
     }
 
 }

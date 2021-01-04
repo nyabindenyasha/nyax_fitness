@@ -1,25 +1,18 @@
 package com.nyasha.fitnessapp.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.minimum.local.ActionResult;
+import com.nyasha.fitnessapp.local.Utils;
 import com.nyasha.fitnessapp.models.Athlete;
 import com.nyasha.fitnessapp.models.SitAndReachTest;
 import com.nyasha.fitnessapp.service.AthleteService;
 import com.nyasha.fitnessapp.service.SitAndReachTestService;
-import com.minimum.local.ActionResult;
-
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -37,6 +30,11 @@ public class SitAndReachTestController {
 	public ResponseEntity<Iterable<SitAndReachTest>> findAll() {
 		try {
 			List<SitAndReachTest> sitAndReachTests = sitAndReachTestService.findAll();
+
+			for (SitAndReachTest x : sitAndReachTests) {
+				x.setResult(Utils.getSitAndReachTest(x.getSitAndReachTest()));
+			}
+
 			return ResponseEntity.ok().body(sitAndReachTests);
 		} catch (Exception exception) {
 			Iterable<SitAndReachTest> iterable = null;

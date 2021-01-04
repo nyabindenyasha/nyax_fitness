@@ -14,9 +14,9 @@
 	<name>fitness-be</name>
 	<description>Demo project for Spring Boot</description>
 
-	<!--<properties>-->
-		<!--<java.version>11</java.version>-->
-	<!--</properties>-->
+    <properties>
+        <java.version>11</java.version>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -38,7 +38,8 @@
 			<version>2.9.2</version>
 		</dependency>
 
-		<dependency>
+
+        <dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.18</version>

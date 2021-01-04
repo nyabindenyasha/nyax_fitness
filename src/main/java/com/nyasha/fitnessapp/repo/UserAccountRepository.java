@@ -1,20 +1,20 @@
 package com.nyasha.fitnessapp.repo;
 
 
-import com.nyasha.fitnessapp.models.Account;
+import com.nyasha.fitnessapp.models.UserAccount;
 
 import java.util.Optional;
 
-public interface UserAccountRepository extends BaseRepository<Account> {
+public interface UserAccountRepository extends BaseRepository<UserAccount> {
 
-    boolean existsByUserName(String name);
+    boolean existsByUsername(String name);
 
     boolean existsByFirstName(String name);
 
-    Account getByUserName(String username);
+    UserAccount getByUsername(String username);
 
-    Optional<Account> findByUserName(String username);
+    Optional<UserAccount> findByUsername(String username);
 
-    Optional<Account> findByFirstName(String firstName);
+    Optional<UserAccount> findByFirstName(String firstName);
 
 }
