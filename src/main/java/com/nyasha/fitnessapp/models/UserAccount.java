@@ -34,7 +34,7 @@ public class UserAccount implements Serializable {
     private String lastName;
 
     @Size(min = 1, max = 50)
-    @Column(name = "user_name")
+    @Column(name = "username")
     private String username;
 
     @Enumerated(EnumType.ORDINAL)
@@ -42,6 +42,9 @@ public class UserAccount implements Serializable {
 
     @Column(name = "password")
     private String password;
+
+    @Transient
+    private Teams team;
 
     @Column(name = "team_id")
     private int teamId;

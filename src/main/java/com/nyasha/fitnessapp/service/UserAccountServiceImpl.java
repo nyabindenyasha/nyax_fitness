@@ -3,6 +3,7 @@ package com.nyasha.fitnessapp.service;
 import com.minimum.local.InvalidRequestException;
 import com.nyasha.fitnessapp.local.LoginRequest;
 import com.nyasha.fitnessapp.local.enums.Role;
+import com.nyasha.fitnessapp.models.Athlete;
 import com.nyasha.fitnessapp.models.UserAccount;
 import com.nyasha.fitnessapp.repo.UserAccountRepository;
 import lombok.val;
@@ -18,9 +19,15 @@ class UserAccountServiceImpl extends BaseServiceImpl<UserAccount, UserAccount, U
 
     private final UserAccountRepository userAccountRepository;
 
-    UserAccountServiceImpl(UserAccountRepository userAccountRepository) {
+    private final AthleteServiceHelper athleteServiceHelper;
+
+    private final TeamsService teamsService;
+
+    UserAccountServiceImpl(UserAccountRepository userAccountRepository, AthleteServiceHelper athleteServiceHelper, TeamsService teamsService) {
         super(userAccountRepository);
         this.userAccountRepository = userAccountRepository;
+        this.athleteServiceHelper = athleteServiceHelper;
+        this.teamsService = teamsService;
     }
 
     @Override
@@ -38,6 +45,13 @@ class UserAccountServiceImpl extends BaseServiceImpl<UserAccount, UserAccount, U
         }
 
         UserAccount userAccount = UserAccount.fromCommand(request);
+
+        userAccount.setTeam(teamsService.findOne(request.getTeamId()));
+
+        if (request.getRole() == Role.TEAM_USER) {
+            Athlete athlete = Athlete.fromUserAccount(userAccount);
+            athleteServiceHelper.create(athlete);
+        }
 
         return userAccountRepository.save(userAccount);
     }
@@ -71,10 +85,11 @@ class UserAccountServiceImpl extends BaseServiceImpl<UserAccount, UserAccount, U
     @Override
     public UserAccount login(LoginRequest request) {
         UserAccount userAccount;
-        if (!userAccountRepository.existsByUsername(request.getUserName())) {
+        System.out.println(request);
+        if (!userAccountRepository.existsByUsername(request.getUsername())) {
             throw new InvalidRequestException("User does not exist");
         }
-        userAccount = findByUsername(request.getUserName());
+        userAccount = findByUsername(request.getUsername());
 
         if (!userAccount.getPassword().equals(request.getPassword())) {
             throw new InvalidRequestException("Wrong password");

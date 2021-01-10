@@ -5,5 +5,6 @@ public enum Position {
 	DEFENDER,
 	MIDFILDER,
 	FORWARD,
-	STRIKER
+    STRIKER,
+    DEFAULTY
 }

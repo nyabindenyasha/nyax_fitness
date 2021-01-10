@@ -1,10 +1,16 @@
 package com.nyasha.fitnessapp.repo;
 
-import org.springframework.data.repository.CrudRepository;
-
 import com.nyasha.fitnessapp.models.SitAndReachTest;
+import org.springframework.stereotype.Repository;
 
-public interface SitAndReachTestRepo extends BaseRepository<SitAndReachTest>{
+import java.util.List;
+
+@Repository
+public interface SitAndReachTestRepo extends BaseRepository<SitAndReachTest> {
+
+    List<SitAndReachTest> findByAthlete_Team_Id(long teamId);
+
+    boolean existsByAthlete_Id(long athleteId);
 
 }
 
